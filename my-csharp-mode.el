@@ -1,5 +1,3 @@
-(require 'cc-mode)
-
 (defconst cs-keywords
   '("abstract"
     "as"
