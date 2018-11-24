@@ -155,15 +155,16 @@
         (setq indent-col (- indent-col cs-indent-offset))))
     (save-excursion
       (back-to-indentation)
-      (if (and (looking-back (concat "^" cs-white-space "*"
-                                     "\\(if\\|else\\|for\\|foreach\\|while\\)"
-                                     cs-white-space "*" "[^{;]*" cs-white-space "*")
-                             nil)
-               (not (looking-at "{")))
-        (setq indent-col (+ indent-col cs-indent-offset))))
+      (if (and (not (looking-at "{"))
+               (or (looking-back (concat "^" cs-white-space "*"
+                                         "\\(if\\|else\\|for\\|foreach\\|while\\)"
+                                         cs-white-space "*" "[^{;]*" cs-white-space "*")
+                                 nil)
+                   (and (not (looking-at "[])]")) (progn (backward-up-list) (looking-at "[[(]")))))
+          (setq indent-col (+ indent-col cs-indent-offset))))
     (indent-line-to indent-col)
     (if (> (- (point-max) pos) (point))
-	  (goto-char (- (point-max) pos)))))
+	(goto-char (- (point-max) pos)))))
 
 (defvar cs-syntax-table
   (let ((synTable (make-syntax-table)))
